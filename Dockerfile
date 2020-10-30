@@ -1,8 +1,9 @@
 FROM ubuntu:20.04
 
-ARG ERLANG_VERSION=23.0.3
-ARG ELIXIR_VERSION=1.10.4-otp-23
-ARG NODEJS_VERSION=12.16.1
+ARG ERLANG=23.1.1
+ARG ELIXIR=1.11.1-otp-23
+ARG NODEJS=14.15.0
+ARG ASDF=v0.8.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -34,7 +35,7 @@ RUN apt-get update -q && \
 ENV ASDF_ROOT /root/.asdf
 ENV PATH "${ASDF_ROOT}/bin:${ASDF_ROOT}/shims:$PATH"
 
-RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_ROOT} --branch v0.7.8  \
+RUN git clone https://github.com/asdf-vm/asdf.git ${ASDF_ROOT} --branch ${ASDF} \
  && asdf plugin-add erlang \
  && asdf plugin-add elixir \
  && asdf plugin-add nodejs \
@@ -48,17 +49,17 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 # install erlang
-RUN asdf install erlang ${ERLANG_VERSION} \
- && asdf global erlang ${ERLANG_VERSION}
+RUN asdf install erlang ${ERLANG} \
+ && asdf global erlang ${ERLANG}
 
 # install elixir
-RUN asdf install elixir ${ELIXIR_VERSION} \
- && asdf global elixir ${ELIXIR_VERSION}
+RUN asdf install elixir ${ELIXIR} \
+ && asdf global elixir ${ELIXIR}
 
 # install local Elixir hex and rebar
 RUN mix local.hex --force \
  && mix local.rebar --force
 
 # install nodejs
-RUN asdf install nodejs ${NODEJS_VERSION} \
- && asdf global nodejs ${NODEJS_VERSION}
+RUN asdf install nodejs ${NODEJS} \
+ && asdf global nodejs ${NODEJS}
